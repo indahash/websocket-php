@@ -29,15 +29,16 @@ class Client implements LoggerAwareInterface
 
     // Default options
     protected static $default_options = [
-        'context'       => null,
-        'filter'        => ['text', 'binary'],
+        'context' => null,
+        'filter' => ['text', 'binary'],
         'fragment_size' => 4096,
-        'headers'       => null,
-        'logger'        => null,
-        'origin'        => null, // @deprecated
-        'persistent'    => false,
-        'return_obj'    => false,
-        'timeout'       => 5,
+        'headers' => null,
+        'logger' => null,
+        'origin' => null, // @deprecated
+        'persistent' => false,
+        'return_obj' => false,
+        'timeout' => 5,
+        'timeout_microseconds' => 0,
     ];
 
     private $socket_uri;
@@ -87,13 +88,14 @@ class Client implements LoggerAwareInterface
      * Set timeout.
      * @param int $timeout Timeout in seconds.
      */
-    public function setTimeout(int $timeout): void
+    public function setTimeout(int $timeout, int $microseconds = 0): void
     {
         $this->options['timeout'] = $timeout;
+        $this->options['timeout_microseconds'] = $microseconds;
         if (!$this->isConnected()) {
             return;
         }
-        $this->connection->setTimeout($timeout);
+        $this->connection->setTimeout($timeout, $microseconds);
         $this->connection->setOptions($this->options);
     }
 
