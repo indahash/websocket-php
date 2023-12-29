@@ -353,7 +353,7 @@ class Client implements LoggerAwareInterface
                     $host_uri,
                     $errno,
                     $errstr,
-                    $this->options['timeout'],
+                    floatval($this->options['timeout'] + ($this->options['timeout_microseconds'] / 1000000)),
                     $flags,
                     $context
                 );
@@ -377,7 +377,7 @@ class Client implements LoggerAwareInterface
 
         if (!$persistent || $this->connection->tell() == 0) {
             // Set timeout on the stream as well.
-            $this->connection->setTimeout($this->options['timeout']);
+            $this->connection->setTimeout($this->options['timeout'], $this->options['timeout_microseconds']);
 
             // Generate the WebSocket key.
             $key = self::generateKey();
